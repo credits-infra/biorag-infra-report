@@ -1,0 +1,22 @@
+date,task,model,config,elapsed_s,entries,gt,note
+2026-10-01,lipid_judge,deepseek-v4.1-flash,raw,81,25,25,基线;9 次定向小读
+2026-10-01,lipid_judge,mimo-v2.6-flash,raw,844,25,25,单次生成卡 10 分钟
+2026-10-01,lipid_judge,mimo-v2.6-flash,none,470,24,25,"关思考提速 44%,漏 1 题"
+2026-10-01,lipid_judge,mimo-v2.6-flash,method,407,25,25,"小步任务书,质量回满"
+2026-10-01,lipid_judge,space-bunny-free,raw,110,23,25,人工通读漏 2 题
+2026-10-01,lipid_judge,space-bunny-free,method_with_hint,50,25,25,带陷阱提示
+2026-10-01,lipid_judge,space-bunny-free,method,68,25,25,"无提示,0 多 0 漏"
+2026-10-01,lipid_judge,gpt-6-luna,raw,56,23,25,漏 3 题全在维生素与类固醇子条款
+2026-10-01,lipid_judge,gpt-6-luna,method,73,25,25,期间 1 次 HTTP 400
+2026-10-01,lipid_judge,muse-spark-1.3-contributor,raw,98,25,25,判定谱与基线一致
+2026-10-02,lipid_judge,Ling-3.1-flash,none,112.7,25,25,14 次调用
+2026-10-02,lipid_judge,Ling-3.1-flash,medium,300.4,25,25,24 次调用
+2026-10-11,lipid_judge,deepseek-v4.1-flash,raw,359,24,24,GT 修正后的复测
+2026-10-11,lipid_judge,step-5-preview,raw,1510,24,24,慢 4.2 倍
+2026-10-02,rag_eukreg,deepseek-v4.1-flash,medium,547.9,67,,"引用去重 70,伪造 0,检索 16 次"
+2026-10-02,rag_eukreg,Ling-3.1,medium,273.5,38,,"引用 65,伪造 0,检索 15 次"
+2026-10-02,rag_eukreg,space-bunny-free,medium,917.9,106,,"引用 80,伪造 1,检索 18 次"
+2026-10-02,rag_eukreg,muse-1.3-contributor,medium,345.1,31,,"引用 45,伪造 0,检索 10 次"
+2026-10-02,rag_eukreg,mimo-v2.6-flash,medium,735.4,40,,"引用 47,伪造 0,检索 10 次"
+2026-10-02,exam_pipeline,space-bunny-free,raw,3057,73,,Supervisor 调用 100 触顶;脚本报错约 10 次
+2026-10-02,exam_pipeline,deepseek-v4.1-flash,raw,659,72,,Supervisor 调用 19;脚本报错 0
