@@ -2,6 +2,12 @@
 
 `ingest.py` 将 MinerU 的 Markdown 产物切分为块并写入 ChromaDB。
 
+## MinerU 访问入口
+
+解析这一层不由本仓库实现。MinerU 官方维护的生态仓库 [MinerU-Ecosystem](https://github.com/opendatalab/MinerU-Ecosystem) 提供网页入口、命令行、Python 与 Go 的 SDK、MCP 服务以及 LangChain 与 LlamaIndex 的集成，Agent 可以直接按仓库说明调用，无需自行封装提交与轮询。
+
+入口选择、两种 API 模式的上限、凭证与额度的说明见同目录 [`MinerU-接入指南.md`](MinerU-接入指南.md)。MinerU 的输出目录（`full.md`、`content_list.json`、`layout.json`、`images/`）就是 `ingest.py --docs` 的输入，更换获取方式不影响下游。
+
 ## 处理流程
 
 1. 遍历 `docs/<书名>/*/full.md`。目录名由 MinerU 生成，形如 `生物化学_上册_5-9.pdf-<uuid>/`；页码范围由原文件名保留。
