@@ -97,7 +97,7 @@ class TestTree(unittest.TestCase):
     def _tree(self, md: str):
         return b.index_book(md)
 
-    def test_区间收口与父子关系(self):
+    def test_区间闭合与父子关系(self):
         md = "# 第一章 绪论\n\n## 第一节 甲\n\n## 第二节 乙\n\n# 第二章 酶\n\n## 第一节 丙\n"
         entry = self._tree(md)
         nodes = entry["nodes"]
@@ -110,7 +110,7 @@ class TestTree(unittest.TestCase):
         # 最后一个节点收到文末
         self.assertEqual(nodes[4].end, entry["n_lines"])
 
-    def test_栏目挂在最近的上级之下(self):
+    def test_栏目归属最近的上级节点(self):
         md = "# 第一章 绪论\n\n## 小结\n\n## 第一节 甲\n"
         nodes = self._tree(md)["nodes"]
         self.assertEqual(nodes[1].kind, b.KIND_栏目)

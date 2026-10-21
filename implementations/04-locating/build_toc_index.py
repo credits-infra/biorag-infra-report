@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""build_toc_index.py — 从被拍平的 Markdown 重建教材层级，并把每个向量块定位回原文行号。
+"""build_toc_index.py：从标题级别被压缩的 Markdown 重建教材层级，并把每个向量块定位回原文行号。
 
 背景：PDF 转 Markdown 时 h1 到 h4 被压成同一个级别，入库脚本「`# ` 是章、`## ` 是节」的假设
-落空，chroma 里的 `chapter` 大面积错位。重建不改数据库，只产出两个离线文件：
+不成立，chroma 里的 `chapter` 大面积错位。重建不改数据库，只产出两个离线文件：
 
     toc_index.json  每本书的标题节点数组（有序区间树）与起始行号数组
     chunk_loc.json  chunk_id → 原文行号、完整标题链、原库 chapter（便于对照）
@@ -31,7 +31,7 @@ from typing import Iterable, Iterator, Sequence
 
 # ─────────────────────────── 分类规则 ───────────────────────────
 # 规则来自实际数据的归纳：先把「栏目」摘出去（专栏名、题型、图注、卷头），
-# 再按篇/章/节/小节/小点分层。顺序不能换——栏目优先，否则「参考文献」会被当成节。
+# 再按篇/章/节/小节/小点分层。顺序不能调换：栏目优先，否则「参考文献」会被判成节。
 
 LEVEL_篇 = 1
 LEVEL_章 = 1
@@ -239,7 +239,7 @@ def index_book(md_text: str) -> dict:
 def locate_chunk(full_text: str, chunk_text: str) -> int | None:
     """在原文里定位块的起始行号。
 
-    用块自身的正文前两行做锚点，而不是拿标题文本查表：重复标题（「小结」出现十几次）
+    用块自身的正文前四行做锚点，不采用标题文本查表：重复标题（「小结」出现十几次）
     会把所有块指到第一次出现的位置。锚点找不到时退化为首行前 120 字。
     """
     lines = [x for x in chunk_text.splitlines() if x.strip()]
@@ -351,7 +351,7 @@ def resolve_book_map(collections: Sequence[str], toc_books: Sequence[str],
     """决定每个 collection 对应哪本书的目录。
 
     优先级：显式映射 > 元数据里的 book（常见情形是它等于 collection 名）> 归一化后的互相包含。
-    剩下对不上的库要报出来——静默跳过会让覆盖率看起来像 0 却不说明原因。
+    剩下对不上的库要报出来：静默跳过会让覆盖率显示为 0，却不说明原因。
     """
     meta_books = meta_books or {}
     out: dict[str, str] = {}
