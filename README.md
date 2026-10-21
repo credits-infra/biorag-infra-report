@@ -15,4 +15,5 @@
 
 ## 许可
 
-文字部分采用 CC BY 4.0（https://creativecommons.org/licenses/by/4.0/）；`implementations/` 下的代码采用 MIT，见 `LICENSE`。从其他项目复制的文件保留原许可，见各目录 README。
+文字部分采用 CC BY 4.0（ https://creativecommons.org/licenses/by/4.0/ ）
+`implementations/` 下的代码采用 MIT，见 `LICENSE`。从其他项目复制的文件保留原许可，见各目录 README。
