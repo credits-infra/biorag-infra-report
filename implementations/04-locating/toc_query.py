@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""toc_query.py — 用一维有序区间树回答「这一行或这一块属于书的哪一章哪一节」。
+"""toc_query.py：用一维有序区间树回答「这一行或这一块属于书的哪一章哪一节」。
 
-这份实现是为技术报告附带的参考实现,不是生产脚本原文(生产脚本未保留)。
-它只读 toc_index.json 与 chunk_loc.json 两个数据文件,不碰 ChromaDB。
+这份实现为技术报告附带的参考实现，生产环境的生成与查询脚本另行维护。
+它只读 toc_index.json 与 chunk_loc.json 两个数据文件，不碰 ChromaDB。
 
 用法:
     python3 toc_query.py --index /path/to/toc_index chunk Principle_of_Biochem_9f3a1c0b77d2
@@ -36,16 +36,16 @@ def load(index_dir: Path):
 
 
 def starts_of(doc_entry: dict) -> list[int]:
-    """取一本书的节点起始行号数组。数据里若有 starts 字段就直接用,否则现算。"""
+    """取一本书的节点起始行号数组。数据里若有 starts 字段就直接用，否则现算。"""
     if doc_entry.get("starts"):
         return doc_entry["starts"]
     return [n["start"] for n in doc_entry["nodes"]]
 
 
 def chain_at(doc_entry: dict, line: int) -> list[dict]:
-    """返回包含该行的标题链,从篇到节。
+    """返回包含该行的标题链，从篇到节。
 
-    区间定义保证:每个节点的 end 是下一个同级或更高级标题的前一行,
+    区间定义保证:每个节点的 end 是下一个同级或更高级标题的前一行，
     所以 bisect_right(starts, line) - 1 得到的节点必然包含这一行。
     """
     starts = starts_of(doc_entry)
@@ -85,19 +85,20 @@ def cmd_chunk(args, toc, loc):
 
 
 def cmd_line(args, toc, loc):
+    """行号是分册内行号,一本书有多个分册时逐个匹配并列出,不做取舍。"""
     if args.book not in toc:
         sys.exit(f"toc_index.json 里没有这本书:{args.book};可选:{', '.join(sorted(toc))}")
-    best = None
-    for entry in toc[args.book]:
-        if 1 <= args.line <= entry.get("n_lines", args.line):
-            best = entry
-            break
-    if best is None:
-        sys.exit(f"{args.book} 没有覆盖第 {args.line} 行的文档")
-    chain = chain_at(best, args.line)
-    print(f'{args.book} 第 {args.line} 行')
-    print(f"  出处:{fmt(chain)}")
-    print(f"  文档:{best.get('doc')}")
+    hits = [e for e in toc[args.book] if 1 <= args.line <= e.get("n_lines", 0)]
+    if args.doc:
+        hits = [e for e in hits if args.doc in e.get("doc", "")]
+    if not hits:
+        longest = max((e.get("n_lines", 0) for e in toc[args.book]), default=0)
+        sys.exit(f"{args.book} 没有覆盖第 {args.line} 行的分册;该书最长的分册为 {longest} 行")
+    for entry in hits:
+        chain = chain_at(entry, args.line)
+        print(f"{args.book} 第 {args.line} 行")
+        print(f"  出处:{fmt(chain)}")
+        print(f"  文档:{entry.get('doc')}")
 
 
 def cmd_tree(args, toc, loc):
@@ -123,6 +124,7 @@ def main():
     p2 = sub.add_parser("line", help="按行号查出处")
     p2.add_argument("book")
     p2.add_argument("line", type=int)
+    p2.add_argument("--doc", default="", help="只查文件名包含该片段的分册")
     p2.set_defaults(func=cmd_line)
 
     p3 = sub.add_parser("tree", help="列出某书的篇与章")

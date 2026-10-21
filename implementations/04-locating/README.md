@@ -23,16 +23,18 @@ python3 build_toc_index.py \
 python3 build_toc_index.py --docs /srv/bio-kb/docs --chroma /srv/bio-kb/chroma_db \
     --book-map book_map.example.json --dry-run
 
-# 查询
-python3 toc_query.py --index /srv/bio-kb/toc_index chunk Principle_of_Bio_9f3a1c0b77d2
-python3 toc_query.py --index /srv/bio-kb/toc_index line 生物化学原理 5021
-python3 toc_query.py --index /srv/bio-kb/toc_index tree 生物化学原理
+# 查询（生成端与查询端分开）
+python3 toc_query.py --index /srv/bio-kb/toc_index chunk Principle_of_Bio_86fa362f343a
+python3 toc_query.py --index /srv/bio-kb/toc_index line 生物化学原理 4765 --doc 1-10
+python3 toc_query.py --index /srv/bio-kb/toc_index tree 微生物学
 
 # 测试
 python3 -m unittest discover -s . -p 'test_*.py'
 ```
 
 生成过程只读：全程只对 ChromaDB 调 `get`，不写一个字节。省略 `--chroma` 时只建树、不定位块。
+
+行号是分册内行号。一本书有多个分册时，同一行号在每个分册里都存在，`line` 子命令会逐个列出命中的分册，用 `--doc` 按文件名片段过滤。上面三条示例的取值来自随仓库发布的数据：《生物化学原理》第 4765 行属于「第八章 核酸的性质及研究方法 > 四、协同性的生物学意义 > 2. 负协同性的生物学意义」。
 
 ## 术语
 
