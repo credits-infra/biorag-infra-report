@@ -11,7 +11,9 @@
 
 ## 复现前提
 
-参考实现需要 Python 3.11、ChromaDB 1.x、LlamaIndex 0.14.x、一个可用的 DashScope 账号（embedding 与 rerank），以及 MinerU 的在线接口账号（OCR 阶段）。代码中的路径均为占位路径，运行前需要改为本地路径。
+参考实现需要 Python 3.11、ChromaDB 1.x、LlamaIndex 0.14.x、一个可用的 DashScope 账号（embedding 与 rerank），以及 MinerU 的在线接口账号（OCR 阶段）。
+
+OCR 阶段的接入方式见 `implementations/01-ocr-chunking/MinerU-接入指南.md`，其中列出去处（官方生态仓库的网页入口、命令行、SDK 与 MCP 服务）、两种 API 模式的上限与凭证存放位置。代码中的路径均为占位路径，运行前需要改为本地路径。
 
 ## 许可
 
